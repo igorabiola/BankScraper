@@ -1,0 +1,10 @@
+branch='<Agência do banco itau>'
+account='<conta do banco ( sem o verificador )>'
+verifier='< digito verificador >'
+password='< senha de acesso ao itau bankLine >'
+
+statmentFolder="statments"
+
+myFinanceLogin = '<login do myFinance>'
+myFinancePassoword = '<senha do myFinance>'
+myFinanceAccuntName= '<Nome da conta corrente do myFinance a ser integrada>'
