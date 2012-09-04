@@ -178,7 +178,7 @@ class ItauScraper {
 				def year = now.format('yyyy')
 				
 				File statment = new File(saveDir, "statment_${browser.form.Ano}_${browser.form.Mes}_${browser.form.Dia}_TO_${year}_${month}_${day}.ofx")
-				//browser.quit()
+
 				statment.append(arq)
 				return statment.absolutePath
 			}
