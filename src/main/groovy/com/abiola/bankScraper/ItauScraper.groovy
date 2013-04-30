@@ -4,6 +4,7 @@ import org.apache.log4j.Logger
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
+import com.gargoylesoftware.htmlunit.ThreadedRefreshHandler
 
 import geb.Browser
 import geb.Page;
@@ -15,7 +16,7 @@ class HomePage extends Page{
 		branch(wait: true) { $('input', id: 'agencia') }
 		account { $('input', id: 'conta') }
 		verifier { $('input', id: 'dac') }
-		submit(to:[FailPage, LoginPage]) { $('div', id: 'btnEnviar').find("input") }	
+		submit() { $('div', id: 'btnEnviar').find("input") }	
 	}
 }
 
@@ -28,13 +29,13 @@ class FailPage extends Page{
 
 
 class LoginPage extends Page{
-	static at = { 
+	static at = {
 		$('form', name: 'bankline') != null
 		$('form', name: 'bankline').size() > 0
 	}
 	
 	static content = {
-		clientName { $('div', id: 'MSGBordaEsq').find("a", class: 'msgtexto8') }
+		clientName(wait: true) { $('div', id: 'MSGBordaEsq').find("a", class: 'msgtexto8') }
 		form { $('form', name: 'bankline') }	
 		buttons { form.find('td', class: 'textotecladovar') }
 		submit(to:WelcomePage) { form.find('a', id: 'idBtnContinuar') }
@@ -60,7 +61,7 @@ class StatmentPage extends Page{
 	}
 	static content = {
 		optionsBox { $('div', id: 'BOXcontainer01') }
-		statmentLink(to: StatmentExportMiscPage ){ optionsBox.find( 'p', 4 ).find('a') }
+		statmentLink(to: StatmentExportMiscPage ){ optionsBox.find( 'p', 5 ).find('a') }
 	}	
 }
 
@@ -126,7 +127,7 @@ class ItauScraper {
 		def month;
 		def year;
 		if( lastSync != null ){
-			def start = lastSync + 1
+			def start = lastSync
 			day = start.format('dd')
 			month = start.format('MM')
 			year = start.format('yyyy')
@@ -146,13 +147,18 @@ class ItauScraper {
 	}
 	
 	def scrape = {
+
+		
 		browser.to HomePage
+		browser.report "HomePage"
 		if(browser.at(HomePage)){
 			browser.branch << branch
 			browser.account << account
 			browser.verifier << verifier
 			browser.submit.click()
+			//browser.report "LoginPage"
 			if ( browser.at(LoginPage) ){
+				//browser.report "LoginPageAfter"
 				browser.clientName.click()
 				keys = mapKeys(browser.buttons)
 				def pass = password =~ /\d/

@@ -42,6 +42,7 @@ def scraper = new ItauScraper(branch: config.branch.toString(),
 def statmentPath = scraper.scrape()
 logger.info("Salvando extrato em: $statmentPath")
 
+
 def exporter = new MyFinanceExporter( login: config.myFinanceLogin.toString(), password: config.myFinancePassoword.toString(), 
 	accountName: config.myFinanceAccuntName.toString(), browser: browser )
 
@@ -50,7 +51,8 @@ exporter.export(statmentPath);
 FileWriter fw = new FileWriter( lastSyncFile )
 def xml = new MarkupBuilder(fw)
 xml.lastSync( sf.format(Calendar.getInstance().getTime()) )
-
 fw.close();
 
 browser.quit()
+
+XvfbService.getInstance().stop();

@@ -74,6 +74,6 @@ class MyFinanceExporter {
 				
 			browser.importSubmit.click()
 			
-			browser.refreshImport()
+			//browser.refreshImport()
 	}
 }
