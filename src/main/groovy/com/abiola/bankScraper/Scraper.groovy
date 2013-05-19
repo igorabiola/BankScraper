@@ -39,20 +39,26 @@ def scraper = new ItauScraper(branch: config.branch.toString(),
 	browser: browser )
 
 
-def statmentPath = scraper.scrape()
-logger.info("Salvando extrato em: $statmentPath")
+try{
+	def statmentPath = scraper.scrape()
+	logger.info("Salvando extrato em: $statmentPath")
+	
+	
+	def exporter = new MyFinanceExporter( login: config.myFinanceLogin.toString(), password: config.myFinancePassoword.toString(), 
+		accountName: config.myFinanceAccuntName.toString(), browser: browser )
+	
+	//exporter.export(statmentPath);
+	
+	//FileWriter fw = new FileWriter( lastSyncFile )
+	//def xml = new MarkupBuilder(fw)
+	//xml.lastSync( sf.format(Calendar.getInstance().getTime()) )
+	//fw.close();
+}
+catch( Exception e ){
+	println e
+}
+finally{
+	browser.quit()
+}
+//XvfbService.getInstance().stop();
 
-
-def exporter = new MyFinanceExporter( login: config.myFinanceLogin.toString(), password: config.myFinancePassoword.toString(), 
-	accountName: config.myFinanceAccuntName.toString(), browser: browser )
-
-exporter.export(statmentPath);
-
-FileWriter fw = new FileWriter( lastSyncFile )
-def xml = new MarkupBuilder(fw)
-xml.lastSync( sf.format(Calendar.getInstance().getTime()) )
-fw.close();
-
-browser.quit()
-
-XvfbService.getInstance().stop();

@@ -10,15 +10,14 @@ repositories {
 }
 
 dependencies {
-	groovy group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.0.0'
-	//compile "org.codehaus.geb:geb-core:0.7.2"
+	groovy group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.1.2'
+
 	compile "org.gebish:geb-core:0.9.0"
 	compile "org.seleniumhq.selenium:selenium-firefox-driver:2.32.0"
-//	compile "org.seleniumhq.selenium:selenium-chrome-driver:2.29.1"
 	compile "org.seleniumhq.selenium:selenium-htmlunit-driver:2.32.0"
-//{
-//		exclude group:'xml-apis'	
-//	}
+
+	compile( "com.github.detro.ghostdriver:phantomjsdriver:1.0.3" )
+	
 	compile "org.seleniumhq.selenium:selenium-support:2.32.0"
 	compile 'log4j:log4j:1.2.17'
 	compile 'org.springframework.integration:spring-integration-mail:2.1.0.RELEASE'

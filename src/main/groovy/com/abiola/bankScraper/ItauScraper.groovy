@@ -10,13 +10,18 @@ import geb.Browser
 import geb.Page;
 
 class HomePage extends Page{
-	static url = "https://bankline.itau.com.br/lgnet/itauf/bankline.htm"	
+	//static url = "https://bankline.itau.com.br/lgnet/itauf/bankline.htm"	
+	static url = "http://www.itau.com.br/"
 	static at = { title == "Banco Itaú - Feito Para Você" }
 	static content = {
-		branch(wait: true) { $('input', id: 'agencia') }
-		account { $('input', id: 'conta') }
-		verifier { $('input', id: 'dac') }
-		submit() { $('div', id: 'btnEnviar').find("input") }	
+		//branch(wait: true) { $('input', id: 'agencia') }
+		//account { $('input', id: 'conta') }
+		//verifier { $('input', id: 'dac') }
+		//submit() { $('div', id: 'btnEnviar').find("input") }	
+		branch(wait: true) { $('input', id:'campo_agencia') }
+		account { $('input', id:'campo_conta') }
+		//verifier { $('input', id: 'dac') }
+		submit() { $('a.btnSubmit') }
 	}
 }
 
@@ -31,7 +36,7 @@ class FailPage extends Page{
 class LoginPage extends Page{
 	static at = {
 		$('form', name: 'bankline') != null
-		$('form', name: 'bankline').size() > 0
+		//$('form', name: 'bankline').size() > 0
 	}
 	
 	static content = {
@@ -148,50 +153,62 @@ class ItauScraper {
 	
 	def scrape = {
 
-		
-		browser.to HomePage
-		browser.report "HomePage"
-		if(browser.at(HomePage)){
-			browser.branch << branch
-			browser.account << account
-			browser.verifier << verifier
-			browser.submit.click()
-			//browser.report "LoginPage"
-			if ( browser.at(LoginPage) ){
-				//browser.report "LoginPageAfter"
-				browser.clientName.click()
-				keys = mapKeys(browser.buttons)
-				def pass = password =~ /\d/
-				pass.each{ 
-					keys[it].click()
-				}
+		try{
+			browser.to HomePage
+			browser.report "HomePage"
+			if(browser.at(HomePage)){
+				browser.branch << branch
+				browser.account << account
+				browser.account << verifier
+//				browser.verifier << verifier
 				browser.submit.click()
-				assert browser.at(WelcomePage)
-				browser.statmentLink.click()
-				assert browser.at(StatmentPage)
-				browser.statmentLink.click()
-				assert browser.at( StatmentExportMiscPage )
-				
-				fillForm( browser, lastSync )
-				
-				def arq = downloadStatment(browser)
-				logger.info("Download complete!")
-				new File(saveDir).mkdirs()
-				
-				def now= new Date();
-				def day = now.format('dd')
-				def month = now.format('MM')
-				def year = now.format('yyyy')
-				
-				File statment = new File(saveDir, "statment_${browser.form.Ano}_${browser.form.Mes}_${browser.form.Dia}_TO_${year}_${month}_${day}.ofx")
-
-				statment.append(arq)
-				return statment.absolutePath
+				browser.report "LoginPage"
+				if ( browser.at(LoginPage) ){
+					browser.clientName.click()
+					browser.report "LoginPageAfter"
+					keys = mapKeys(browser.buttons)
+					def pass = password =~ /\d/
+					pass.each{ 
+						try{
+							keys[it].click()
+						}
+						catch(Exception e){
+							println 'erro ao clickar no teclado virtual...'
+						}
+						
+					}
+					browser.submit.click()
+					assert browser.at(WelcomePage)
+					browser.statmentLink.click()
+					assert browser.at(StatmentPage)
+					browser.statmentLink.click()
+					assert browser.at( StatmentExportMiscPage )
+					
+					fillForm( browser, lastSync )
+					
+					def arq = downloadStatment(browser)
+					logger.info("Download complete!")
+					new File(saveDir).mkdirs()
+					
+					def now= new Date();
+					def day = now.format('dd')
+					def month = now.format('MM')
+					def year = now.format('yyyy')
+					
+					File statment = new File(saveDir, "statment_${browser.form.Ano}_${browser.form.Mes}_${browser.form.Dia}_TO_${year}_${month}_${day}.ofx")
+					statment.write("")
+					statment << arq
+					return statment.absolutePath
+				}
+				else{
+					println "Branch/Account combination invalid!"
+					return -1
+				}
 			}
-			else{
-				println "Branch/Account combination invalid!"
-				return -1
-			}
+		}
+		catch( Exception e ){
+			println( "Erro ao acessar bankLink: ")
+			e.printStackTrace(); 
 		}
 	}
 	

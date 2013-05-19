@@ -1,3 +1,5 @@
+package com.abiola.bankScraper;
+
 public class XvfbService {
 	def process
 	private static XvfbService instance;
