@@ -9,7 +9,11 @@ import com.gargoylesoftware.htmlunit.BrowserVersion
 driver = { 
 
 	//new FirefoxDriver()
-//	return new HtmlUnitDriver(BrowserVersion.FIREFOX_17)
+//	def htmlUnit = new HtmlUnitDriver(BrowserVersion.FIREFOX_17 )
+//	htmlUnit.setJavascriptEnabled(true)
+//
+//	return htmlUnit
+	
 	/* Xvfb :1 -screen 0 1024x768x24 */
 	//new ProcessBuilder("Xvfb", ':1', '-screen', '0', '1024x768x24').start();
 	//XvfbService.getInstance().start()
@@ -25,9 +29,9 @@ driver = {
 		
 
 		caps.setCapability('phantomjs.page.settings.userAgent', 'Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25');		
-		caps.setCapability('phantomjs.page.settings.userAgent', 'Mozilla/5.0 (Windows NT 6.2; Win64; x64;) Gecko/20100101 Firefox/20.0');
+//		caps.setCapability('phantomjs.page.settings.userAgent', 'Mozilla/5.0 (Windows NT 6.2; Win64; x64;) Gecko/20100101 Firefox/20.0');
 		def driver = new PhantomJSDriver(caps)
-		driver.manage().window().setSize(new Dimension(1028, 768))
+		//driver.manage().window().setSize(new Dimension(1028, 768))
 		return driver
 
 }

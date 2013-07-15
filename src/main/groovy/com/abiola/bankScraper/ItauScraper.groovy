@@ -155,17 +155,18 @@ class ItauScraper {
 
 		try{
 			browser.to HomePage
-			browser.report "HomePage"
+//			browser.report "HomePage"
 			if(browser.at(HomePage)){
 				browser.branch << branch
-				browser.account << account
+				browser.account <<  account
 				browser.account << verifier
 //				browser.verifier << verifier
+				println browser.submit.text()
 				browser.submit.click()
-				browser.report "LoginPage"
+//				browser.report "LoginPage"
 				if ( browser.at(LoginPage) ){
 					browser.clientName.click()
-					browser.report "LoginPageAfter"
+//					browser.report "LoginPageAfter"
 					keys = mapKeys(browser.buttons)
 					def pass = password =~ /\d/
 					pass.each{ 
@@ -173,7 +174,7 @@ class ItauScraper {
 							keys[it].click()
 						}
 						catch(Exception e){
-							println 'erro ao clickar no teclado virtual...'
+							logger.info( 'erro ao clickar no teclado virtual...')
 						}
 						
 					}
@@ -201,14 +202,13 @@ class ItauScraper {
 					return statment.absolutePath
 				}
 				else{
-					println "Branch/Account combination invalid!"
+					logger.error( "Branch/Account combination invalid!" )
 					return -1
 				}
 			}
 		}
 		catch( Exception e ){
-			println( "Erro ao acessar bankLink: ")
-			e.printStackTrace(); 
+			logger.error( "Erro ao acessar bankLink: ", e)
 		}
 	}
 	

@@ -47,15 +47,15 @@ try{
 	def exporter = new MyFinanceExporter( login: config.myFinanceLogin.toString(), password: config.myFinancePassoword.toString(), 
 		accountName: config.myFinanceAccuntName.toString(), browser: browser )
 	
-	//exporter.export(statmentPath);
+	exporter.export(statmentPath);
 	
-	//FileWriter fw = new FileWriter( lastSyncFile )
-	//def xml = new MarkupBuilder(fw)
-	//xml.lastSync( sf.format(Calendar.getInstance().getTime()) )
-	//fw.close();
+	FileWriter fw = new FileWriter( lastSyncFile )
+	def xml = new MarkupBuilder(fw)
+	xml.lastSync( sf.format(Calendar.getInstance().getTime()) )
+	fw.close();
 }
 catch( Exception e ){
-	println e
+	logger.error( e )
 }
 finally{
 	browser.quit()

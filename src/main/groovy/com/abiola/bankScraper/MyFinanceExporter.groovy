@@ -5,7 +5,8 @@ import geb.Page;
 
 
 class MyFinanceLoginPage extends Page{
-	static url = "https://app.myfinance.com.br/users/auth/passaporte_web"
+	//static url = "https://app.myfinance.com.br/users/auth/passaporte_web"
+	static url = "https://app.myfinance.com.br/auth/passaporte_web"
 	static at = { title == "Login | Passaporte Web" }
 	static content = {
 		login(wait: true) { $('input', id: 'id_email') }
@@ -17,19 +18,20 @@ class MyFinanceLoginPage extends Page{
 class MyFinanceHomePage extends Page{
 	static at = { title == "Visão Geral - Painel - MyFinance" }
 	static content = {
-		finances { $(id: 'js-item-entities') }
-		menu { $('div', id:'js-menu-entities') }
-		accounts( to:MyFinanceAccountPage ) { menu.find('a', text:'Movimento Bancário') }
+		finances(wait: true) { $(id: 'js-item-entities') }
+		menu(wait: true) { $('div', id:'js-menu-entities') }
+		accounts( to:MyFinanceAccountPage, wait: true ) { menu.find('a', text:'Movimento Bancário') }
 	}
 }
 
 class MyFinanceAccountPage extends Page{
 	static at = { title.startsWith("Conta")}
 	static content = {
-		switcherAccount { $(id: 'show-account-switcher') }
-		accountsList { $('div', class:'accountList') }
-		statmentImport{ $( id:'li-import-financial-transaction' ) }
-		importFile{ $( id:'bank_statement_file' ) }
+		//switcherAccount { $(id: 'show-account-switcher') }
+		switcherAccount { $(id: 'changeDepositAccount').find(class:'turn-on-switcher-item') }
+		accountsList { $('div', class:'itemList') }
+		statmentImport{ $( id:'link-import-form' ) }
+		importFile(wait: 15){ $( id:'bank_statement_file' ) }
 		importForm{ $(id:'bank_statement_upload') }
 		importSubmit{ $(id:'bank_statement_upload').find('input', type:'submit') }
 		importRefresh( required: false ){ $(id:'import_refresh_button') }
@@ -63,7 +65,11 @@ class MyFinanceExporter {
 			browser.finances.click()
 			browser.accounts.click()
 			
+			browser.report "conta"
+			
 			browser.switcherAccount.click()
+			
+			browser.report "lista de contas"
 			
 			findAccountLink( accountName , browser.accountsList ).click()
 			
@@ -71,7 +77,9 @@ class MyFinanceExporter {
 		
 			println extractPath
 			browser.importFile.value(extractPath)
-				
+		
+			browser.report "Extratos"
+					
 			browser.importSubmit.click()
 			
 			//browser.refreshImport()
