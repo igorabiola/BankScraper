@@ -29,7 +29,7 @@ class MyFinanceAccountPage extends Page{
 	static content = {
 		//switcherAccount { $(id: 'show-account-switcher') }
 		switcherAccount { $(id: 'changeDepositAccount').find(class:'turn-on-switcher-item') }
-		accountsList { $('div', class:'itemList') }
+		accountsList { $('div', class:'item-list') }
 		statmentImport{ $( id:'link-import-form' ) }
 		importFile(wait: 15){ $( id:'bank_statement_file' ) }
 		importForm{ $(id:'bank_statement_upload') }
